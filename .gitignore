@@ -1,3 +1,7 @@
+# uploads ... ignore everything in the foler but not readme.txt
+uploads/*
+!readme.txt
+
 # Logs
 logs
 *.log
