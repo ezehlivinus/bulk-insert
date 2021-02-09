@@ -26,7 +26,7 @@ const validateUser = async (user = {}) => {
   const schema = Joi.object({
     password: Joi.string().min(6).max(60).required(),
     email: Joi.string().email().trim().lowercase()
-    .required()
+      .required()
   });
 
   const value = await schema.validateAsync(user);
@@ -34,6 +34,26 @@ const validateUser = async (user = {}) => {
   return value;
 };
 
+/**
+ * @description validate user data from excel
+ */
+const validateExcelData = (user = {}) => {
+  const schema = Joi.object({
+    first_name: Joi.string().required(),
+    last_name: Joi.string().required(),
+    other_names: Joi.string().required(),
+    email: Joi.string().email().trim().lowercase()
+      .required(),
+    display_name: Joi.string().required(),
+    gender: Joi.string().required(),
+    phoneNumber: Joi.number().required(),
+    address: Joi.string().required(),
+    birth_date: Joi.date().required()
+
+  });
+  return schema.validate(user);
+};
+
 module.exports = {
-  User, validateUser
+  User, validateUser, validateExcelData
 };

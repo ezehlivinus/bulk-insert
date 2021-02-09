@@ -7,7 +7,12 @@ exports.up = async (knex) => {
     table.increments('id').primary();
     table.string('first_name', 255).notNullable();
     table.string('last_name', 255).notNullable();
-    table.string('bio');
+    table.string('other_names', 255);
+    table.string('display_name', 255);
+    table.enu('gender', ['male', 'female']).notNullable();
+    table.string('phoneNumber').notNullable();
+    table.string('address');
+    table.date('birth_date');
 
     table.integer('user_id')
       .references('id')

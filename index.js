@@ -11,8 +11,10 @@ const app = express();
 
 start(app);
 
-const server = app.listen(2021, () => {
-  console.log('Listening on port 2021');
+const PORT = process.env.PORT || 2021
+
+const server = app.listen(PORT, () => {
+  console.log('Listening on port ', PORT);
 });
 
 module.exports = {
