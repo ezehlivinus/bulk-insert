@@ -39,13 +39,13 @@ const validateUser = async (user = {}) => {
  */
 const validateExcelData = (user = {}) => {
   const schema = Joi.object({
-    first_name: Joi.string().required(),
-    last_name: Joi.string().required(),
-    other_names: Joi.string().required(),
+    first_name: Joi.string().required().trim(),
+    last_name: Joi.string().required().trim(),
+    other_names: Joi.string().required().trim(),
     email: Joi.string().email().trim().lowercase()
       .required(),
     display_name: Joi.string().required(),
-    gender: Joi.string().required(),
+    gender: Joi.string().trim().required().lowercase(),
     phoneNumber: Joi.number().required(),
     address: Joi.string().required(),
     birth_date: Joi.date().required()

@@ -1,9 +1,13 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable no-restricted-syntax */
 const bcrypt = require('bcrypt');
 const _ = require('lodash');
 const sheetReader = require('read-excel-file/node');
 const { getJsDateFromExcel } = require('excel-date-to-js');
 const Joi = require('joi');
 const { User, validateUser, validateExcelData } = require('../models/User');
+const { UserProfile } = require('../models/UserProfile');
 const { deleteFile } = require('../services/upload-service');
 
 exports.create = async (req, res) => {
@@ -26,9 +30,6 @@ exports.create = async (req, res) => {
  * @description create many users same time, data usually from excel or csv
  */
 exports.createMany = async (req, res) => {
-  // return res.send('users');
-
-  // const { value, error } = schema.validate(user);
 
   if (!('file' in req)) {
     return res.status(400).send({
@@ -36,7 +37,6 @@ exports.createMany = async (req, res) => {
       message: 'no files were uploaded or attached'
     });
   }
-  // return res.send('users');
 
   const rows = await sheetReader(req.file.path);
   // skip headers
@@ -54,43 +54,142 @@ exports.createMany = async (req, res) => {
     'birth_date'
   ];
 
-  const users = [];
-  const userError = [];
+  const validUsers = [];
+  const userValidationError = [];
   rows.forEach((row, rIndex) => {
-    const user = {
-
-    };
+    const user = {};
     headers.forEach((header, hIndex) => {
       // convert excel-number-date to JS date
-      const cell = hIndex === 8 ? getJsDateFromExcel(row[hIndex]) : row[hIndex];
+      let cell = hIndex === 8 ? getJsDateFromExcel(row[hIndex]) : row[hIndex];
+      if (header === 'gender') {
+        // we only keep lower gender values
+        // Joi synchronous validate() was unable convert it unlike it async counterpart
+        cell = cell.toLowerCase();
+      }
       user[header] = cell;
     });
 
     const { value, error } = validateExcelData(user);
 
     if (error) {
-      userError.push({ user: value, error: error.details[0].message });
+      userValidationError.push({
+        user: value,
+        error: error.details[0].message
+      });
     } else {
-      users.push(user);
+      validUsers.push(user);
     }
   });
 
   await deleteFile(req.file);
 
-  // we want to find find many where their id occurred
-  
+  // get the valid users' email
+  const validUsersEmails = validUsers.map((user, index) => user.email);
 
-  if (_.isEmpty(userError)) {
-    return res.status(201).send({
+  // find their id in db
+  const usersInDb = await User.query()
+    .select('id', 'email')
+    .whereIn('email', validUsersEmails);
+
+  // check email that does not exist in db
+  // get email in db
+  const identities = [];
+  const emailsInDb = [];
+  usersInDb.forEach((user, index) => {
+    identities.push(user.id);
+    emailsInDb.push(user.email);
+  });
+
+  // get email in file
+  const emailsInFile = [];
+  validUsers.forEach((user, index) => {
+    emailsInFile.push(user.email);
+  });
+
+  // check for intersection :
+  // users that is in database and also in excel-file
+  const intersection = usersInDb
+    .filter((email, index) => emailsInFile.includes(email.email));
+
+  // emails that appear in file but not in database
+  const difference = emailsInFile
+    .filter((email, index) => !emailsInDb.includes(email));
+
+  const _difference = validUsers
+    .filter((user, index) => difference.includes(user.email));
+
+  // return res.send({ intersection, difference, _difference });
+
+  // filter users from validated Users :
+  // those to be inserted into db and those that wont make it
+  const notToBeInserted = [];
+  const toBeInserted = [];
+  for (const user of validUsers) {
+    const entry = intersection.find(({ email }) => email === user.email);
+
+    if (_.isEmpty(entry)) {
+      // this set of users does not exist in database
+      notToBeInserted.push(user);
+    } else {
+      // prepare the data for user_profiles table
+      user.user_id = entry.id;
+
+      toBeInserted.push(_.omit(user, ['email']));
+    }
+  }
+
+  // return res.send({ toBeInserted, notToBeInserted });
+
+  const created = 'are lists of users that profile was created for';
+  const notCreated = 'these users, their data validated but they does not exist';
+  const validationError = 'these are set of users whose detail failed to validate';
+
+
+  // if nothing will be created
+  if (_.isEmpty(toBeInserted)) {
+    return res.status(400).send({
       success: true,
-      message: `success : ${users.length} users created`,
-      data: users
+      message: 'success: though some data are invalid',
+      data: {
+        notCreated: notToBeInserted,
+        validationError: userValidationError,
+        meta: {
+          notCreated, validationError
+        }
+      }
     });
   }
 
-  return res.status(200).send({
+  // insert multiple profiles
+  const userProfiles = await UserProfile.query()
+    .insert(toBeInserted);
+
+  // when there is no validation error
+  if (_.isEmpty(userValidationError)) {
+    return res.status(201).send({
+      success: true,
+      message: 'all data validated',
+      data: {
+        created: userProfiles,
+        notCreated: notToBeInserted,
+        meta: {
+          created, notCreated
+        }
+      }
+    });
+  }
+
+  // if there is validation error
+  return res.status(201).send({
     success: true,
     message: 'success: though some data are invalid',
-    data: { users, validationError: userError }
+    data: {
+      created: userProfiles,
+      notCreated: notToBeInserted,
+      validationError: userValidationError,
+      meta: {
+        created, notCreated, validationError
+      }
+    }
   });
 };

@@ -18,5 +18,5 @@ const server = app.listen(PORT, () => {
 });
 
 module.exports = {
-  app, server
+  app, server, Knex
 };
