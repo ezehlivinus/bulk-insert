@@ -5,8 +5,9 @@
 
 module.exports = (error, req, res, next) => {
   const data = {
-    status: false,
-    message: `Something failed:... ${error.message}`
+    success: false,
+    message: `Something failed:... ${error.message}`,
+    'graceful-detail': 'nativeError' in error ? error.nativeError.detail : error
   };
 
   console.error('From async error middleware', error);

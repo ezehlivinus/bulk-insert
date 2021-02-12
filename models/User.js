@@ -51,7 +51,7 @@ const validateExcelData = (user = {}) => {
     birth_date: Joi.date().required()
 
   });
-  return schema.validate(user);
+  return schema.validateAsync(user);
 };
 
 module.exports = {
