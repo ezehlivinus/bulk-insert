@@ -10,7 +10,7 @@ const start = require('./start/kernel');
 let knex = Knex(database.development);
 
 if (process.env.NODE_ENV === 'production') {
-  knex = Knex(process.env.DATABASE_URL);
+  knex = Knex(process.env._DATABASE_URL);
 }
 
 Model.knex(knex);
