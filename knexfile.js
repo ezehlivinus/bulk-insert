@@ -1,5 +1,5 @@
 module.exports = {
-  production: {
+  development: {
     client: 'pg',
     connection: {
       host: '127.0.0.1',
@@ -10,6 +10,15 @@ module.exports = {
     pool: {
       min: 2,
       max: 10
+    }
+  },
+  production: {
+    client: 'pg',
+    connection: process.env.DATABASE_URL,
+    pool: {
+      min: 2,
+      max: 10,
+      ssl: { rejectUnauthorized: false },
     }
   }
 };

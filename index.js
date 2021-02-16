@@ -7,7 +7,7 @@ const { Model, ForeignKeyViolationError, ValidationError } = require('objection'
 const database = require('./knexfile');
 const start = require('./start/kernel');
 
-let knex = Knex(database.production);
+let knex = Knex(database.development);
 
 if (process.env.NODE_ENV === 'production') {
   knex = Knex(process.env.DATABASE_URL);
@@ -24,7 +24,7 @@ const PORT = process.env.PORT || 4000;
 const server = app.listen(PORT, () => {
   console.log('Listening on port ', PORT);
   console.log(
-    'Connected to', database.production.connection.database, 'database'
+    'Connected to database...'
   );
 });
 
