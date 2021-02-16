@@ -1,10 +1,18 @@
 const { Model } = require('objection');
 const Joi = require('joi');
+const _ = require('lodash');
 
 class User extends Model {
   // Table name is the only required property.
   static get tableName() {
     return 'users';
+  }
+
+  // determine what is return during API response
+  $formatJson(json) {
+    json = super.$formatJson(json);
+    delete json.password;
+    return json;
   }
 
   static get relationMappings() {

@@ -17,6 +17,9 @@ const PORT = process.env.PORT || 4000;
 
 const server = app.listen(PORT, () => {
   console.log('Listening on port ', PORT);
+  console.log(
+    'Connected to', database.production.connection.database, 'database'
+  );
 });
 
 module.exports = {

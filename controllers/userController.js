@@ -26,6 +26,12 @@ exports.create = async (req, res) => {
   });
 };
 
+exports.list = async (req, res) => {
+  const users = await User.query();
+
+  res.status(200).send({ success: true, message: 'user list', data: users })
+}
+
 /**
  * @description create many users same time, data usually from excel or csv
  */

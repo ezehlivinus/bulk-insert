@@ -5,7 +5,7 @@ const { upload } = require('../../config/multer');
 const UserController = require('../../controllers/userController');
 
 router.route('/')
-  // .get(UserController.list)
+  .get(UserController.list)
   .post(UserController.create);
 
 router.route('/create-many')

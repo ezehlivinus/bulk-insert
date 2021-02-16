@@ -12,3 +12,10 @@ exports.create = async (req, res) => {
     success: true, message: 'success', data: _.omit(user, ['password'])
   });
 };
+
+
+exports.list = async (req, res) => {
+  const usersProfiles = await UserProfile.query();
+
+  res.status(200).send({ success: true, message: 'user profiles', data: usersProfiles })
+}
