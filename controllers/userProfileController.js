@@ -1,3 +1,4 @@
+const _ = require('lodash')
 const { UserProfile, validateUserProfile } = require('../models/UserProfile');
 
 exports.create = async (req, res) => {
@@ -16,6 +17,7 @@ exports.create = async (req, res) => {
 
 exports.list = async (req, res) => {
   const usersProfiles = await UserProfile.query();
+  if (_.isEmpty(usersProfiles)) return res.status(409).send({ success: false, message: 'proifile not found' });
 
   res.status(200).send({ success: true, message: 'user profiles', data: usersProfiles })
 }

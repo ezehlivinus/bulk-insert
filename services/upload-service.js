@@ -37,7 +37,7 @@ exports.processStudentFile = async (rows, req) => {
       'display_name',
       'gender',
       'email',
-      'phoneNumber',
+      'phone_number',
       'address',
       'birth_date'
     ];

@@ -1,11 +1,13 @@
+require('dotenv').config();
+
 module.exports = {
   development: {
     client: 'pg',
     connection: {
-      host: '127.0.0.1',
-      user: 'postgres',
-      password: 'root',
-      database: 'bulky'
+      host: process.env.DB_HOST,
+      user: process.env.DB_USER,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME
     },
     pool: {
       min: 2,
@@ -14,11 +16,14 @@ module.exports = {
   },
   production: {
     client: 'pg',
+
+    sslmode: {
+      rejectUnauthorized: false
+    },
     connection: process.env.DATABASE_URL,
     pool: {
       min: 2,
-      max: 10,
-      ssl: { rejectUnauthorized: false },
+      max: 10
     }
   }
 };

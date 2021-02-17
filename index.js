@@ -1,7 +1,7 @@
 const express = require('express');
 const Knex = require('knex');
 require('express-async-errors');
-require('dotenv').config();
+// require('dotenv').config();
 
 const { Model, ForeignKeyViolationError, ValidationError } = require('objection');
 const database = require('./knexfile');
@@ -10,7 +10,7 @@ const start = require('./start/kernel');
 let knex = Knex(database.development);
 
 if (process.env.NODE_ENV === 'production') {
-  knex = Knex(process.env._DATABASE_URL);
+  knex = Knex(database.production);
 }
 
 Model.knex(knex);

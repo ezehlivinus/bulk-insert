@@ -29,8 +29,10 @@ exports.create = async (req, res) => {
 exports.list = async (req, res) => {
   const users = await User.query();
 
-  res.status(200).send({ success: true, message: 'user list', data: users })
-}
+  if (_.isEmpty(users)) return res.status(409).send({ success: false, message: 'users not found' });
+
+  res.status(200).send({ success: true, message: 'user list', data: users });
+};
 
 /**
  * @description create many users same time, data usually from excel or csv
@@ -58,15 +60,15 @@ exports.createMany = async (req, res) => {
   // crunch the data : in db and validated
   const { notToBeInserted, toBeInserted } = await crunchStudentData(usersInDb, validUsers);
 
-  const created = 'are lists of users that profile was created for';
-  const notCreated = 'these users, their data validated but they does not exist';
+  const created = 'are lists of users whose profiles was created for';
+  const notCreated = 'are list of users whose data was validated but they does not exist';
   const validationError = 'these are set of users whose detail failed to validate';
 
   // if nothing will be created
   if (_.isEmpty(toBeInserted)) {
     return res.status(400).send({
-      success: true,
-      message: 'success: though some data are invalid',
+      success: false,
+      message: 'no profile was created',
       data: {
         notCreated: notToBeInserted,
         validationError: userValidationError,

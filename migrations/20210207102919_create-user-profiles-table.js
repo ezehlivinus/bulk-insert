@@ -10,7 +10,7 @@ exports.up = async (knex) => {
     table.string('other_names', 255);
     table.string('display_name', 255);
     table.enu('gender', ['male', 'female']).notNullable();
-    table.string('phoneNumber').notNullable();
+    table.string('phone_number').notNullable();
     table.string('address');
     table.date('birth_date');
 
