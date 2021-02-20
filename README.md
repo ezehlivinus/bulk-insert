@@ -17,8 +17,11 @@ Install the following
   - copy the content of `.env.example` into `.env` file, the copied data are env variables
 
   - setup this variable where necessary to match your database credentials.
-    - DBPORT may not be need on local.
-    - DBNAME and other credentials should already exist before hand to be update before the running migration 
+    - DB_PORT may not be need on local.
+    - DB_NAME and other credentials should already exist before hand to be update before the running migration
+    - If you are using production database : or want to connect to remote db from localhost
+      - Then setup the DATABASE_URL key to the string your db hosting provider gave you.
+      - set `NODE_ENV=production`...NB that if this is in development and want to use remote db it wont work.
 - install knexjs migration CLI globally: `npm install knex -g`
 
 - run migration : `knex migrate:latest` this run the migrations files
