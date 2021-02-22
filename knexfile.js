@@ -18,7 +18,7 @@ module.exports = {
     client: 'pg',
     connection: process.env.HEROKU_POSTGRESQL_JADE_URL,
     migrations: {
-      directory: `${__dirname}/migrations`
+      directory: `./migrations`
     },
     pool: {
       min: 2,
