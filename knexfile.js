@@ -16,7 +16,7 @@ module.exports = {
   },
   production: {
     client: 'pg',
-    connection: process.env.DATABASE_URL || process.env.HEROKU_POSTGRESQL_JADE_URL,
+    connection: process.env.HEROKU_POSTGRESQL_JADE_URL,
     migrations: {
       directory: `${__dirname}/migrations`
     },
