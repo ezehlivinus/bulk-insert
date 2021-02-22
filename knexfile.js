@@ -16,9 +16,12 @@ module.exports = {
   },
   production: {
     client: 'pg',
-    connection: process.env.HEROKU_POSTGRESQL_JADE_URL || process.env.DATABASE_URL,
+    connection: process.env.HEROKU_POSTGRESQL_JADE_URL + '?sslmode=require' || process.env.DATABASE_URL + '?sslmode=require',
     migrations: {
       directory: `./migrations`
+    },
+    ssl: {
+      rejectUnauthorized: false
     },
     pool: {
       min: 2,
