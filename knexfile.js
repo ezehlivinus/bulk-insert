@@ -16,7 +16,10 @@ module.exports = {
   },
   production: {
     client: 'pg',
-    connection: process.env.DATABASE_URL,
+    connection: process.env.DATABASE_URL || process.env.HEROKU_POSTGRESQL_JADE_URL,
+    migrations: {
+      directory: `${__dirname}/migrations`
+    },
     pool: {
       min: 2,
       max: 10
