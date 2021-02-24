@@ -6,6 +6,10 @@ const routes = require('./routes/index');
 
 const asyncError = require('../middlewares/async-error');
 
+process.on('unhandledRejection', (e) => {
+  throw new Error(e);
+});
+
 module.exports = (app) => {
   app.use(morgan('dev'));
   app.use(cors());

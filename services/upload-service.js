@@ -1,6 +1,6 @@
 const fsPromises = require('fs').promises;
 const { getJsDateFromExcel } = require('excel-date-to-js');
-const { validateExcelData } = require('../models/User');
+const { validateExcelData } = require('../models/UserProfile');
 
 // delete a  file
 /**
