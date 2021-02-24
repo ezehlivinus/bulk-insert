@@ -3,7 +3,7 @@ This is allow one to import spreadsheet (excel, xlsx) file into.
 Currently env is maintain : database variables were hard coded. This is for testing purpose only.
 
 
-# Usage
+# Usage ~ Setup
 ## Requirements
 Install the following
 - PostgresSQL version 12 and set it up
@@ -30,10 +30,23 @@ Install the following
   - `npm run dev` it will start on port `4000` or some other port if one is set in .env file
   - Note that you should have finish setting up env before starting the server, if for any reason you change something on the .env file , you may need to stop the server, even if it was ran with nodemon.
 
+# Frontend ::: Consuming the api
+- The base route or url for the api is: `https://room4010-bulk-insert.herokuapp.com/api/v1` ... This endpoint is not usable (or consumable )
+- Checkout routes section below on how to make request
+
+# Backend ::: Consuming the api as backend person
+- The base route or url for the api on the internet is: `https://room4010-bulk-insert.herokuapp.com/api/v1` ... This endpoint is not usable (or consumable )
+- local machine main url: `localhost:4000/api/v1`
+- Checkout routes section below on how to make request
+
+
 # routes
-- local machine main url: `localhost:4000`
-- basePath: `/api/v1`
-- Example the address to create a user is: host:port/basePath/users => `localhost:4000/api/v1/users`
+- Making a request: You will always append as suffix the name of the resource you want to make a request to.
+- A resource can have many endpoints but starting with the name of the resource
+- Example: the address to create a user is:
+  - on local machine: host:port/basePath/users => `localhost:4000/api/v1/users`
+  - on the internet: `https://room4010-bulk-insert.herokuapp.com/api/v1/users`
+  - where `users` is the name of the resource
 ## Resource
 - Users
   - `create user`: `/users`
@@ -43,7 +56,8 @@ Install the following
   - list all users `/users`
     - `method`: GET
 
-  - `create many` users' profiles: `/api/v1/users/create-many` in the future this end point will be moved to `/user-profiles` route.
+- User-Profiles
+  - `create many` users' profiles: `/api/v1/user-profiles/create-many` in the future this end point will be moved to `/user-profiles` route.
     - `method`: POST
     - `data`: an excel file : having some defined headers in the following order but horizontally (i.e row wise). Their names must NOT be same as the one below but must contain data that fall under the said heading. Example an email address should not be found under last name on your excel sheet:
       ```
@@ -54,21 +68,21 @@ Install the following
         'display_name',
         'gender',
         'email',
-        'phoneNumber',
+        'phone_number',
         'address',
         'birth_date'
       ];
       ```
     - should be sent as form-data: whose input element name is _file: example `< input type="file" name="_file" />` 
     - if sending from POSTMAN:
-       - make sure method is post
-       - under body select `form-data`
-       - then put key as `_file` and change key type from text to file.
-       - then click on `choose file or select file`to attach the said excel file
-       - then send. Check the image below
-       <img src="https://github.com/ezehlivinus/bulk-insert/blob/main/insert-sample.PNG" />
-       - if you can't see the image above, check this link: https://github.com/ezehlivinus/bulk-insert/blob/main/insert-sample.PNG
+        - make sure method is post
+        - under body select `form-data`
+        - then put key as `_file` and change key type from text to file.
+        - then click on `choose file or select file`to attach the said excel file
+        - then send. Check the image below
+        <img src="https://github.com/ezehlivinus/bulk-insert/blob/main/insert-sample.PNG" />
+        - if you can't see the image above, check this link: https://github.com/ezehlivinus/bulk-insert/blob/main/insert-sample.PNG
     - `response`: this includes either validationError, data that was inserted, and/or those that was not inserted, along with other properties.
-  - list all user profiles `/user-profiles`
+  - `list all user profiles` `/user-profiles`
   - `method`: GET
 
