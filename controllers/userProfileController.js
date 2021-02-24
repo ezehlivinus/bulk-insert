@@ -1,10 +1,11 @@
 const _ = require('lodash');
 const sheetReader = require('read-excel-file/node');
-const {
-  UserProfile, validateUserProfile } = require('../models/UserProfile');
+const path = require('path');
+const { UserProfile, validateUserProfile } = require('../models/UserProfile');
 const { User } = require('../models/User');
 const { processStudentFile } = require('../services/upload-service');
 const { crunchStudentData } = require('../services/crunch-data-service');
+const knex = require('../config/database')();
 
 exports.create = async (req, res) => {
   const validData = await validateUserProfile(req.body);
@@ -49,11 +50,11 @@ exports.createMany = async (req, res) => {
   const notCreated = 'are list of users whose data was validated but they does not exist';
   const validationError = 'these are set of users whose detail failed to validate';
 
-  // if nothing will be created
+  // nothing was created because no user(s) with any of the email in the file uploaded
   if (_.isEmpty(toBeInserted)) {
     return res.status(400).send({
       success: false,
-      message: 'no profile was created. This happens when some or all of the user profiles\' emails does not exist or mismatched for any of the existing users',
+      message: 'no profile was created. This happens because no user(s) with any of the email in the file uploaded. Let the users created an account',
       data: {
         notCreated: notToBeInserted,
         validationError: userValidationError,
@@ -64,9 +65,12 @@ exports.createMany = async (req, res) => {
     });
   }
 
-  // insert multiple profiles
+  // insert multiple profiles, this throws error when user_id already exist
   const userProfiles = await UserProfile.query()
     .insert(toBeInserted);
+
+  // const u = await knex('users')
+  //   .whereNotExists(async (builder) => builder.select('*').from('user_profiles'));
 
   // when there is no validation error
   if (_.isEmpty(userValidationError)) {
@@ -100,7 +104,12 @@ exports.createMany = async (req, res) => {
 
 exports.list = async (req, res) => {
   const usersProfiles = await UserProfile.query();
-  if (_.isEmpty(usersProfiles)) return res.status(409).send({ success: false, message: 'proifile not found' });
+  if (_.isEmpty(usersProfiles)) return res.status(409).send({ success: false, message: 'profile not found' });
 
   res.status(200).send({ success: true, message: 'user profiles', data: usersProfiles });
+};
+
+// send back a sample of the excel file to be uploaded for the said user
+exports.sample = async (req, res) => {
+  res.status(200).sendFile(path.resolve('public/sample-user-import.xlsx'));
 };
