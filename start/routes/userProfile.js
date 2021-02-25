@@ -14,4 +14,7 @@ router.route('/create-many')
     upload.single('_file')
   ], UserProfileController.createMany);
 
+router.get('/sample',
+  UserProfileController.sample);
+
 module.exports = router;
