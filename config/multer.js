@@ -22,35 +22,15 @@ const excelFilter = (req, file, cb) => {
   if (mimeTypes.includes(file.mimetype)) {
     cb(null, true);
   } else {
-    cb(new Error(`wrong file type ${file.mimetype}`));
-    cb(null, false);
-  }
-};
-
-const fileFilter = (req, file, cb) => {
-  // console.log(file.mimetype);
-
-  if (
-    file.mimetype === 'audio/mpeg'
-    || file.mimetype === 'audio/wave'
-    || file.mimetype === 'audio/wav'
-     || file.mimetype === 'audio/mp3'
-     || file.mimetype === 'audio/x-ms-wma'
-     || file.mimetype === 'audio/x-wav'
-     || file.mimetype === 'audio/vnd.rn-realaudio'
-     || file.mimetype === 'audio/aac'
-  ) {
-    cb(null, true);
-  } else {
-    cb(new Error(`wrong file type ${file.mimetype}`));
+    cb(new Error(`wrong file type ${file.mimetype}. expected either of: ${mimeTypes}`));
     cb(null, false);
   }
 };
 
 exports.upload = multer({
-  storage
+  storage,
   // limits: {
   //   fileSize: 1024 * 1024 * 5
   // },
-  // fileFilter: excelFilter
+  fileFilter: excelFilter
 });
