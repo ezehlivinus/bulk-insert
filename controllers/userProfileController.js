@@ -87,7 +87,7 @@ exports.createMany = async (req, res) => {
   if (_.isEmpty(newProfiles)) {
     return res.status(400).send({
       success: false,
-      message: 'no profile was created. Since they already have an account, they might have profiles',
+      message: 'no profile was created. They might have account already, and may be profiles as well',
       data: {
         notCreated: _existingUsers,
         validationError: userValidationError,
