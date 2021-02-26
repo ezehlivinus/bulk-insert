@@ -2,7 +2,7 @@
 /* eslint-disable no-underscore-dangle */
 const _ = require('lodash');
 
-exports.crunchStudentData = async (usersInDb, validUsers) => {
+exports.crunchUserData = async (usersInDb, validUsers) => {
   try {
     // get emails in the uploaded file
     const emailsInFile = [];

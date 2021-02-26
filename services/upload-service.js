@@ -23,14 +23,15 @@ exports.deleteFile = async (file) => {
 };
 
 /**
- * Process uploaded students data
+ * Process uploaded user data
  */
-exports.processStudentFile = async (rows, req) => {
+exports.processUserData = async (rows, req) => {
   try {
     // skip headers
-    let headers = rows.shift();
+    // this has been removed previously before the rows was passed
+    // let headers = rows.shift();
     // the above headers are not well formed
-    headers = [
+    const headers = [
       'first_name',
       'last_name',
       'other_names',

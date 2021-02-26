@@ -5,8 +5,8 @@ const sheetReader = require('read-excel-file/node');
 const path = require('path');
 const { UserProfile, validateUserProfile } = require('../models/UserProfile');
 const { User } = require('../models/User');
-const { processStudentFile } = require('../services/upload-service');
-const { crunchStudentData } = require('../services/crunch-data-service');
+const { processUserData } = require('../services/upload-service');
+const { crunchUserData } = require('../services/crunch-data-service');
 const knex = require('../config/database')();
 
 exports.create = async (req, res) => {
@@ -34,9 +34,42 @@ exports.createMany = async (req, res) => {
   }
 
   // read file
-  const rows = await sheetReader(req.file.path);
+  // const rows = await sheetReader(req.file.path); //was used to handle a single sheet
+  const sheets = await sheetReader(req.file.path, { getSheets: true });
+
+  /*
+  The structure of rows
+  rows = [
+    [
+      [each of student detail], [], ...
+    ],
+
+    [
+      [teachers detail], [], ...
+    ]
+  ]
+  */
+  const rows = [];
+  for (const sheet of sheets) {
+    // eslint-disable-next-line no-await-in-loop
+    const sheetRows = await sheetReader(req.file.path, { sheet: sheet.name });
+
+    // remove header of each sheet
+    sheetRows.shift();
+
+    rows.push(sheetRows);
+  }
+
+  /*
+  this merge students' and teachers' records together so that we have
+  flattenedRows = [
+    [student 1], [student 2], ..., [teacher 1], [teacher 2]
+  ]
+  This structure is the type that can be processed below
+  */
+  const flattenedRows = rows.flat();
   // process student file and validate data
-  const { validUsers, userValidationError } = await processStudentFile(rows, req);
+  const { validUsers, userValidationError } = await processUserData(flattenedRows, req);
 
   // get the valid users' emails
   const validUsersEmails = validUsers.map((user, index) => user.email);
@@ -50,7 +83,7 @@ exports.createMany = async (req, res) => {
     _newUsers,
     _newUserProfiles,
     _existingUsers
-  } = await crunchStudentData(usersInDb, validUsers);
+  } = await crunchUserData(usersInDb, validUsers);
 
   // create new users where the email of the said users is not in database yet
   const newUsers = await User.query()
@@ -80,7 +113,7 @@ exports.createMany = async (req, res) => {
   //   .insert(_existingUsers.map((user) => _.omit(user, ['email', 'id'])));
 
   const created = 'are lists of users whose accounts was created as well as profiles';
-  const notCreated = 'are list of users whose data validated but they already have a user account';
+  const notCreated = 'are list of users whose data validated but they already have a user account and/or profile';
   const validationError = 'these are set of users whose detail failed to validate';
 
   // nothing was created because no user(s) with any of the email in the file uploaded
