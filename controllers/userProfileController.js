@@ -118,7 +118,7 @@ exports.createMany = async (req, res) => {
 
   // nothing was created because no user(s) with any of the email in the file uploaded
   if (_.isEmpty(newProfiles)) {
-    return res.status(400).send({
+    return res.status(200).send({
       success: false,
       message: 'no profile was created. They might have account already, and may be profiles as well',
       data: {
