@@ -112,7 +112,7 @@ exports.createMany = async (req, res) => {
   //   .whereNotIn('user_id', _newProfiles.map((user) => user.user_id))
   //   .insert(_existingUsers.map((user) => _.omit(user, ['email', 'id'])));
 
-  const created = 'are lists of users whose accounts was created as well as profiles';
+  const created = 'are lists of users whose accounts was created as well as their profiles';
   const notCreated = 'are list of users whose data validated but they already have a user account and/or profile';
   const validationError = 'these are set of users whose detail failed to validate';
 
@@ -120,7 +120,7 @@ exports.createMany = async (req, res) => {
   if (_.isEmpty(newProfiles)) {
     return res.status(400).send({
       success: false,
-      message: 'no profile was created. They might have account already, and may be profiles as well',
+      message: 'no profile was created. They might have an account already, and may be profiles as well',
       data: {
         notCreated: _existingUsers,
         validationError: userValidationError,
