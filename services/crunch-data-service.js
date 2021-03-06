@@ -10,8 +10,8 @@ exports.crunchUserData = async (usersInDb, validUsers) => {
       emailsInFile.push(user.email);
     });
 
-    // check for intersection :
-    // users that is in database and also in excel-file
+    // check for intersection : intersection holds (email, id) of those new user submitted
+    // users' email that are in database and also in excel-file
     const intersection = usersInDb
       .filter((email, index) => emailsInFile.includes(email.email));
 
