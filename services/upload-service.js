@@ -1,6 +1,12 @@
+/* eslint-disable no-underscore-dangle */
 const fsPromises = require('fs').promises;
 const { getJsDateFromExcel } = require('excel-date-to-js');
+const _ = require('lodash');
+const { validateCourse } = require('../models/Course');
 const { validateExcelData } = require('../models/UserProfile');
+
+// const multer = require('multer');
+// const { storage } = require('../config/temp');
 
 // delete a  file
 /**
@@ -72,6 +78,45 @@ exports.processUserData = async (rows, req) => {
 
     await this.deleteFile(req.file);
     return { validUsers, userValidationError };
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+exports.processCourseData = async (rows) => {
+  const headers = [
+    'title',
+    'description',
+    'major',
+    'grade'
+  ];
+
+  try {
+    const validCourses = [];
+    const courseValidationError = [];
+    rows.forEach((row, rIndex) => {
+      const course = {};
+
+      headers.forEach((header, hIndex) => {
+        const _header = header === 'grade' ? 'grade_id' : header;
+        // make major title/capitalised case
+        const cell = header === 'major' ? row[hIndex][0].toUpperCase() + row[hIndex].slice(1).toLowerCase() : row[hIndex];
+        // row[hIndex][0].toUpperCase() + row[hIndex].slice(1).toLowerCase()
+        course[_header] = cell;
+      });
+
+      const { value, error } = validateCourse(course);
+
+      if (error) {
+        courseValidationError.push({
+          user: value,
+          error: error.details[0].message
+        });
+      } else {
+        validCourses.push(value);
+      }
+    });
+    return { validCourses, courseValidationError };
   } catch (error) {
     throw new Error(error);
   }

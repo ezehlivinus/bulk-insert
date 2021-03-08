@@ -8,14 +8,16 @@ class Course extends Model {
   }
 }
 
-const validateCourse = async (course = {}) => {
+const validateCourse = (course = {}) => {
   const schema = Joi.object({
     title: Joi.string().trim().required(),
     is_archived: Joi.boolean(),
-    description: Joi.string()
+    description: Joi.string(),
+    major: Joi.string().required().trim(),
+    grade_id: Joi.number()
   });
 
-  const value = await schema.validateAsync(course);
+  const value = schema.validate(course);
 
   return value;
 };

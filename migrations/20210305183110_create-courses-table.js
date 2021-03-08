@@ -7,11 +7,8 @@ exports.up = async (knex) => {
     table.increments('id').primary();
     table.string('title');
     table.text('description');
-    table.boolean('is_archived').default(false);
     table.enu('major', ['General', 'Arts', 'Science', 'Social Science']);
-
-    // To be added
-    // educational_stage
+    table.integer('grade_id');
 
     // references grade level to be added
 
