@@ -86,3 +86,22 @@ Install the following
   - `list all user profiles` `/user-profiles`
   - `method`: GET
 
+- Courses
+  - `create many` courses: `/api/v1/courses/create-many`
+  - Method: POST
+  - requirement:
+    - excel file
+    - input name attribute should be name="courses"
+    - sample-course-import: download a sample course excel file.
+      - `/api/v1/courses/sample-courses-file`
+      - Method: GET
+
+- Grade-Levels:
+  - `create` grade levels: `/api/v1/grade-levels`
+  - Method: POST
+  - This create many predefined grade levels
+
+- Educational Stages:
+  - `create` Educational Stages: `/api/v1/educational-stages`
+  - Method: POST
+  - Just visit the link
