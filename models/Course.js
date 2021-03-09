@@ -14,7 +14,7 @@ const validateCourse = (course = {}) => {
     is_archived: Joi.boolean(),
     description: Joi.string(),
     major: Joi.string().required().trim(),
-    grade_id: Joi.number()
+    grade_id: Joi.number().required()
   });
 
   const value = schema.validate(course);

@@ -95,17 +95,17 @@ exports.processCourseData = async (rows) => {
     const validCourses = [];
     const courseValidationError = [];
     rows.forEach((row, rIndex) => {
-      const course = {};
+      // const course = {};
 
-      headers.forEach((header, hIndex) => {
-        const _header = header === 'grade' ? 'grade_id' : header;
-        // make major title/capitalised case
-        const cell = header === 'major' ? row[hIndex][0].toUpperCase() + row[hIndex].slice(1).toLowerCase() : row[hIndex];
-        // row[hIndex][0].toUpperCase() + row[hIndex].slice(1).toLowerCase()
-        course[_header] = cell;
-      });
+      // headers.forEach((header, hIndex) => {
+      //   const _header = header === 'grade' ? 'grade_id' : header;
+      //   // make major title/capitalised case
+      //   const cell = header === 'major' ? row[hIndex][0].toUpperCase() + row[hIndex].slice(1).toLowerCase() : row[hIndex];
+      //   // row[hIndex][0].toUpperCase() + row[hIndex].slice(1).toLowerCase()
+      //   course[_header] = cell;
+      // });
 
-      const { value, error } = validateCourse(course);
+      const { value, error } = validateCourse(row);
 
       if (error) {
         courseValidationError.push({

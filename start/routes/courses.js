@@ -9,4 +9,6 @@ router.route('/create-many')
     upload.single('courses')
   ], CourseController.createMany);
 
+router.get('/sample-courses-file', CourseController.sample);
+
 module.exports = router;
