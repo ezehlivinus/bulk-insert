@@ -28,7 +28,6 @@ exports.createMany = async (req, res) => {
       data: {
         validationError: courseValidationError,
         newCourses
-
       }
     });
   }

@@ -5,9 +5,9 @@ exports.up = async (knex) => {
 
   await knex.schema.createTable('grades', (table) => {
     table.increments('id').primary();
-    table.string('title');
+    table.string('title').notNullable();
     table.boolean('is_archived').default(false);
-    table.integer('educational_stage');
+    table.integer('educational_stage_id');
 
     table.timestamps(true, true);
   });
