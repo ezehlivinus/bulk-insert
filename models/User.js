@@ -42,7 +42,6 @@ const validateUser = async (user = {}) => {
   return value;
 };
 
-
 module.exports = {
   User, validateUser
 };
