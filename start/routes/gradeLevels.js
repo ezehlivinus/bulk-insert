@@ -1,5 +1,5 @@
 const express = require('express');
-const GradeController = require('../../controllers/gradeController');
+const GradeController = require('../../controllers/gradeLevelController');
 
 const router = express.Router();
 

@@ -1,10 +1,10 @@
 const { Model } = require('objection');
 const Joi = require('joi');
 
-class Grade extends Model {
+class GradeLevel extends Model {
   // Table name is the only required property.
   static get tableName() {
-    return 'grades';
+    return 'grade_levels';
   }
 }
 
@@ -21,5 +21,5 @@ const validateGrade = async (grade = {}) => {
 };
 
 module.exports = {
-  Grade, validateGrade
+  GradeLevel, validateGrade
 };

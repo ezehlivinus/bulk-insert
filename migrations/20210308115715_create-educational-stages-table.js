@@ -5,8 +5,7 @@ exports.up = async (knex) => {
 
   await knex.schema.createTable('educational_stages', (table) => {
     table.increments('id').primary();
-    table.string('title').notNullable();
-    table.string('code').notNullable();
+    table.string('title').notNullable(); // ex: Primary School, Senior Secondary School, ...
 
     table.timestamps(true, true);
   });

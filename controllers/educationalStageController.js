@@ -7,30 +7,23 @@ exports.create = async (req, res) => {
   // if (grade) return res.status(409).send({ success: false, message: 'grade already exist' });
 
   const existingEducationalStages = [
-    { code: 'S.S 1', title: 'Secondary' },
-    { code: 'S.S 2', title: 'Secondary' },
-    { code: 'S.S 3', title: 'Secondary' },
-    { code: 'J.S.S 1', title: 'Secondary' },
-    { code: 'J.S.S 2', title: 'Secondary' },
-    { code: 'J.S.S 3', title: 'Secondary' },
-    { code: 'Primary 1', title: 'Primary' },
-    { code: 'Primary 2', title: 'Primary' },
-    { code: 'Primary 3', title: 'Primary' },
-    { code: 'Primary 4', title: 'Primary' },
-    { code: 'Primary 5', title: 'Primary' },
-    { code: 'Primary 6', title: 'Primary' }
+    { title: 'Senior Secondary School' },
+    { title: 'Junior Secondary School' },
+    { title: 'Primary School' },
+    { title: 'Basic' },
+    { title: 'Grade' }
   ];
 
-  const codes = [
-    'S.S 1', 'S.S 2', 'S.S 2',
-    'J.S.S 1', 'J.S.S 2', 'J.S.S 3',
-    'Primary 1', 'Primary 2', 'Primary 3',
-    'Primary 4', 'Primary 5', 'Primary 6'
+  const titles = [
+    'Primary School',
+    'Junior Secondary School',
+    'Senior Secondary School',
+    'Basic', 'Grade'
   ];
 
-  // the whereNotIn('code', codes) is not working
+  // the whereNotIn('title', titles) is not working
   const eStages = await EducationalStage.query()
-    .whereNotIn('code', codes).insert(existingEducationalStages);
+    .whereNotIn('title', titles).insert(existingEducationalStages);
 
   return res.status(201).send({
     success: true,
